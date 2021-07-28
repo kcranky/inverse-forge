@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "gDg",
+        "NAN",
+        "gDg"
+    ],
+    "key": {
+        "g": {
+            "item": "minecraft:gold_ingot"
+        },
+        "D": {
+            "item": "minecraft:diamond"
+        },
+        "N": {
+            "item": "minecraft:netherite_scrap"
+        },
+        "A": {
+            "item": "minecraft:apple"
+        }
+    },
+    "result": {"item": "inverseforge:iodisedappleitem", "count":  1},
+    "group": "Food"
+}
