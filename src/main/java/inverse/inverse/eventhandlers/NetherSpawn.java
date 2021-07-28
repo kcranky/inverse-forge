@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Stats;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,13 +37,7 @@ public class NetherSpawn {
     @SubscribeEvent
     public static void playerRespawnEvent(PlayerEvent.PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        ServerPlayer serverPlayer = (ServerPlayer) player;
-
-        BlockPos respawnPosition = serverPlayer.getRespawnPosition();
-
-        if (respawnPosition != null) {
-            respawnInNether(player);
-        }
+        respawnInNether(player);
     }
 
     // Helper for spawning into the nether
@@ -54,12 +49,16 @@ public class NetherSpawn {
             MinecraftServer minecraftServer = overworld.getServer();
             ServerLevel nether = minecraftServer.getLevel(ServerLevel.NETHER);
 
+
+
             if (nether != null && minecraftServer.isNetherEnabled() && CommonConfig.SPAWN.spawnInNether.get()) {
                 // "sea level" in the nether is at y=31
                 // Start at 0, 31, 0.
                 BlockPos.MutableBlockPos standingBlock = new BlockPos.MutableBlockPos();
                 BlockPos.MutableBlockPos standingBlockLegs = new BlockPos.MutableBlockPos();
                 BlockPos.MutableBlockPos standingBlockHead = new BlockPos.MutableBlockPos();
+
+                BlockPos someBlock = new BlockPos(0,0,0);
 
                 findsafe:
                 for (int ynew = 32; ynew < 119; ++ynew) { // 121 is where bedrock starts forming
@@ -70,13 +69,15 @@ public class NetherSpawn {
                             standingBlockHead.set(xnew, ynew + 2, znew);
 
                             // TODO Keegan, yoh man. (BlockState has isValidSpawn method)
-                            boolean canStand = nether.getBlockState(standingBlock).isAir();
+
+                            boolean canStand = !nether.getBlockState(standingBlock).isAir();
                             boolean isAir = nether.getBlockState(standingBlockLegs).isAir() && nether.getBlockState(standingBlockHead).isAir();
                             if (canStand && isAir) {
-                                serverPlayer.teleportTo(nether, xnew, ynew + 1, znew, player.getYRot(), player.getXRot());
-                                LOGGER.debug(xnew);
-                                LOGGER.debug(ynew + 1);
-                                LOGGER.debug(znew);
+                                LOGGER.info("foundsafe");
+                                serverPlayer.teleportTo(nether, xnew, ynew + 1, znew, (float)0.0, (float)0.0);
+                                LOGGER.info(xnew);
+                                LOGGER.info(ynew + 1);
+                                LOGGER.info(znew);
                                 break findsafe;
                             }
                         }
