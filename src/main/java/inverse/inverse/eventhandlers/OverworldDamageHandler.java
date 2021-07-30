@@ -75,7 +75,6 @@ public class OverworldDamageHandler {
             players.forEach(player -> {
                 player.getCapability(OverworldPoisonCapability.INSTANCE).ifPresent(owph -> {
                     owph.incrementTicksInDimension();
-                    float currentMaxHealth = (float)player.getAttribute(Attributes.MAX_HEALTH).getValue();
                     float newPenalty = owph.getHealthPenalty();
                     player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(Math.min(20, 20-newPenalty));
 
@@ -88,7 +87,7 @@ public class OverworldDamageHandler {
                         }
                     } else {
                         if (owph.getTicksInDimension() > invigorateFrequency) {
-                            LOGGER.info("Player feels slightly invigorated by the dark energies in their surroundings");
+                            LOGGER.debug("Player feels slightly invigorated by the dark energies in their surroundings");
                             owph.decrementToxication();
                             owph.setTicksInDimension(0);
                         }
