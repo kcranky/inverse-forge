@@ -1,20 +1,17 @@
 package inverse.inverse.eventhandlers;
 
+import inverse.inverse.config.CommonConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Stats;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import inverse.inverse.config.CommonConfig;
-
-import java.util.Optional;
 
 @Mod.EventBusSubscriber
 public class NetherSpawn {
@@ -52,38 +49,51 @@ public class NetherSpawn {
 
 
             if (nether != null && minecraftServer.isNetherEnabled() && CommonConfig.SPAWN.spawnInNether.get()) {
-                // "sea level" in the nether is at y=31
-                // Start at 0, 31, 0.
-                BlockPos.MutableBlockPos standingBlock = new BlockPos.MutableBlockPos();
-                BlockPos.MutableBlockPos standingBlockLegs = new BlockPos.MutableBlockPos();
-                BlockPos.MutableBlockPos standingBlockHead = new BlockPos.MutableBlockPos();
+                LOGGER.info(CommonConfig.SPAWN.useDeterminedSpawn.get());
+                if (CommonConfig.SPAWN.useDeterminedSpawn.get().equals(true)){
+                    String[] spawnCoordsStr = CommonConfig.SPAWN.spawnCoordinates.get().split(",");
+                    double x = Double.parseDouble(spawnCoordsStr[0]);
+                    double y = Double.parseDouble(spawnCoordsStr[1]);
+                    double z = Double.parseDouble(spawnCoordsStr[2]);
 
-                BlockPos someBlock = new BlockPos(0,0,0);
+                    String[] spawnRotStr = CommonConfig.SPAWN.spawnRotation.get().split(",");
+                    float xRot = Float.parseFloat(spawnRotStr[0]);
+                    float yRot = Float.parseFloat(spawnRotStr[1]);
+                    serverPlayer.teleportTo(nether, x, y, z, xRot, yRot);
+                }
+                else {
+                    // "sea level" in the nether is at y=31
+                    // Start at 0, 31, 0.
+                    BlockPos.MutableBlockPos standingBlock = new BlockPos.MutableBlockPos();
+                    BlockPos.MutableBlockPos standingBlockLegs = new BlockPos.MutableBlockPos();
+                    BlockPos.MutableBlockPos standingBlockHead = new BlockPos.MutableBlockPos();
 
-                findsafe:
-                for (int ynew = 32; ynew < 119; ++ynew) { // 121 is where bedrock starts forming
-                    for (int xnew = -8; xnew < 9; ++xnew) {
-                        for (int znew = -8; znew < 9; ++znew) {
-                            standingBlock.set(xnew, ynew, znew);
-                            standingBlockLegs.set(xnew, ynew + 1, znew);
-                            standingBlockHead.set(xnew, ynew + 2, znew);
+                    BlockPos someBlock = new BlockPos(0,0,0);
 
-                            // TODO Keegan, yoh man. (BlockState has isValidSpawn method)
+                    findsafe:
+                    for (int ynew = 32; ynew < 119; ++ynew) { // 121 is where bedrock starts forming
+                        for (int xnew = -8; xnew < 9; ++xnew) {
+                            for (int znew = -8; znew < 9; ++znew) {
+                                standingBlock.set(xnew, ynew, znew);
+                                standingBlockLegs.set(xnew, ynew + 1, znew);
+                                standingBlockHead.set(xnew, ynew + 2, znew);
 
-                            boolean canStand = !nether.getBlockState(standingBlock).isAir();
-                            boolean isAir = nether.getBlockState(standingBlockLegs).isAir() && nether.getBlockState(standingBlockHead).isAir();
-                            if (canStand && isAir) {
-                                LOGGER.info("foundsafe");
-                                serverPlayer.teleportTo(nether, xnew, ynew + 1, znew, (float)0.0, (float)0.0);
-                                LOGGER.info(xnew);
-                                LOGGER.info(ynew + 1);
-                                LOGGER.info(znew);
-                                break findsafe;
+                                // TODO Keegan, yoh man. (BlockState has isValidSpawn method)
+
+                                boolean canStand = !nether.getBlockState(standingBlock).isAir();
+                                boolean isAir = nether.getBlockState(standingBlockLegs).isAir() && nether.getBlockState(standingBlockHead).isAir();
+                                if (canStand && isAir) {
+                                    LOGGER.info("foundsafe");
+                                    serverPlayer.teleportTo(nether, xnew, ynew + 1, znew, (float)0.0, (float)0.0);
+                                    LOGGER.info(xnew);
+                                    LOGGER.info(ynew + 1);
+                                    LOGGER.info(znew);
+                                    break findsafe;
+                                }
                             }
                         }
                     }
                 }
-
             }
         }
     }

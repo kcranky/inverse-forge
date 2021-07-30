@@ -78,6 +78,9 @@ public final class CommonConfig
     public static class Spawn {
 
         public final ForgeConfigSpec.ConfigValue<Boolean> spawnInNether;
+        public final ForgeConfigSpec.ConfigValue<Boolean> useDeterminedSpawn;
+        public final ForgeConfigSpec.ConfigValue<String> spawnCoordinates;
+        public final ForgeConfigSpec.ConfigValue<String> spawnRotation;
 
         public Spawn(ForgeConfigSpec.Builder builder) {
             builder.push("Inverse Spawn Config");
@@ -85,6 +88,18 @@ public final class CommonConfig
             spawnInNether = builder
                     .comment("Should the player spawn in the nether and respawn there if they don't have a bed set?")
                     .define("spawnInNether", true);
+
+            useDeterminedSpawn = builder
+                    .comment("Set to true if you want the nether spawn to be a particular set of coordinates as defined by \"spawnCoordinates\" and \"spawnRotation\"")
+                    .define("usedDeterminedSpawn", false);
+
+            spawnCoordinates = builder
+                    .comment("X, Y, Z")
+                    .define("spawnCoordinates", "0.0, 64.0, 0.0");
+
+            spawnRotation = builder
+                    .comment("XRot, YRot")
+                    .define("spawnRotation", "0.0, 0.0");
 
             builder.pop();
             }
