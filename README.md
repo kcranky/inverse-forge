@@ -4,6 +4,10 @@
 
 **Version**: 0.0.1
 
+## WAIT. YOU. YES YOU.
+
+This mod would not be possible without the help and support from the incredibly talented [battesonb](https://github.com/battesonb). Not only are they the only one between the two of us who actually can write Java, but they also set up the inital development environment, created the Iodised Apple art, added the initial capability functionality, provided a whole bunch of other logic, and was more patient with me than I deserved with my "I don't know java but want to make a mod" questions. Unfortunately, because porting to 1.17 came with a bunch of issues, keeping that old repo history was fairly difficult (read: impossible) and the rush to get this version out meant creating a new environment was faster than struggling to get the old one working. So this section is for you, battesonb. Thank you <3
+
 ## What does this mod aim to do?
 
 The mod has the following effects by default:
@@ -65,6 +69,6 @@ The bahaviour given above is default behaviour. The mod allows All values can be
 
 - Forge
 - Minecraft version 1.17.1
-- Potentially 1.18 is required
+- Potentially 1.18 if required
 
 There are no plans to support other versions
