@@ -27,12 +27,14 @@ public class NetherSpawn {
 
         // Teleport to Nether if first time joining world
         if (timePlayed < 1 && CommonConfig.SPAWN.spawnInNether.get()) {
+            LOGGER.debug("New player - moving to nether");
             respawnInNether(player);
         }
     }
 
     @SubscribeEvent
     public static void playerRespawnEvent(PlayerEvent.PlayerRespawnEvent event) {
+        LOGGER.debug("Player died - respawning in nether");
         Player player = event.getPlayer();
         respawnInNether(player);
     }
@@ -46,29 +48,23 @@ public class NetherSpawn {
             MinecraftServer minecraftServer = overworld.getServer();
             ServerLevel nether = minecraftServer.getLevel(ServerLevel.NETHER);
 
-
-
             if (nether != null && minecraftServer.isNetherEnabled() && CommonConfig.SPAWN.spawnInNether.get()) {
-                LOGGER.info(CommonConfig.SPAWN.useDeterminedSpawn.get());
-                if (CommonConfig.SPAWN.useDeterminedSpawn.get().equals(true)){
+                if (CommonConfig.SPAWN.useDeterminedSpawn.get()){
                     String[] spawnCoordsStr = CommonConfig.SPAWN.spawnCoordinates.get().split(",");
+                    String[] spawnRotStr = CommonConfig.SPAWN.spawnRotation.get().split(",");
                     double x = Double.parseDouble(spawnCoordsStr[0]);
                     double y = Double.parseDouble(spawnCoordsStr[1]);
                     double z = Double.parseDouble(spawnCoordsStr[2]);
-
-                    String[] spawnRotStr = CommonConfig.SPAWN.spawnRotation.get().split(",");
                     float xRot = Float.parseFloat(spawnRotStr[0]);
                     float yRot = Float.parseFloat(spawnRotStr[1]);
                     serverPlayer.teleportTo(nether, x, y, z, xRot, yRot);
+                    LOGGER.debug("Teleported player to location specified in config");
                 }
                 else {
                     // "sea level" in the nether is at y=31
-                    // Start at 0, 31, 0.
                     BlockPos.MutableBlockPos standingBlock = new BlockPos.MutableBlockPos();
                     BlockPos.MutableBlockPos standingBlockLegs = new BlockPos.MutableBlockPos();
                     BlockPos.MutableBlockPos standingBlockHead = new BlockPos.MutableBlockPos();
-
-                    BlockPos someBlock = new BlockPos(0,0,0);
 
                     findsafe:
                     for (int ynew = 32; ynew < 119; ++ynew) { // 121 is where bedrock starts forming
@@ -79,15 +75,11 @@ public class NetherSpawn {
                                 standingBlockHead.set(xnew, ynew + 2, znew);
 
                                 // TODO Keegan, yoh man. (BlockState has isValidSpawn method)
-
                                 boolean canStand = !nether.getBlockState(standingBlock).isAir();
                                 boolean isAir = nether.getBlockState(standingBlockLegs).isAir() && nether.getBlockState(standingBlockHead).isAir();
                                 if (canStand && isAir) {
-                                    LOGGER.info("foundsafe");
                                     serverPlayer.teleportTo(nether, xnew, ynew + 1, znew, (float)0.0, (float)0.0);
-                                    LOGGER.info(xnew);
-                                    LOGGER.info(ynew + 1);
-                                    LOGGER.info(znew);
+                                    LOGGER.debug("Teleported player to \"random\" nether location");
                                     break findsafe;
                                 }
                             }
