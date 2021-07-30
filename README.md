@@ -47,7 +47,7 @@ The bahaviour given above is default behaviour. The mod allows All values can be
   - Default value is 360
 - `spawnInNether`
   - Set to `true` (default) to spawn in the Nether
-  - Will respawn you in the nether if you don't ahve a bed or respawn anchor set
+  - Will respawn you in the nether if you don't have a bed or respawn anchor set
 - `useDeterminedSpawn`
   - Set to true for the mod to use the values specified in spawnCoordinates and spawnRotation
   - Defaults to false
