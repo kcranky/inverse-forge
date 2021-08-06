@@ -45,6 +45,12 @@ The bahaviour given above is default behaviour. The mod allows All values can be
 - `invigorationFrequency`
   - How often (in seconds) the player should regenerate toxication in the End/Nether
   - Default value is 360
+- `allowAnchorRespawn` 
+  - Set if you want to enable respawn anchors as respawn points in the nether
+  - Defaults to true
+- `allowBedRespawn`
+  - Set if you want to enable beds as respawn points in the overworld
+  - Defaults to false
 - `spawnInNether`
   - Set to `true` (default) to spawn in the Nether
   - Will respawn you in the nether if you don't have a bed or respawn anchor set
