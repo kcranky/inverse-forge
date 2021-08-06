@@ -92,7 +92,7 @@ public final class CommonConfig
                     .define("allowBedRespawn", false);
 
             allowAnchorRespawn = builder
-                    .comment("Set if you want to enable beds as respawn points in the overworld")
+                    .comment("Set if you want to enable respawn anchors as respawn points in the nether")
                     .define("allowAnchorRespawn", true);
 
             spawnInNether = builder
