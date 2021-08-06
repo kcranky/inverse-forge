@@ -1,12 +1,18 @@
 package inverse.inverse.eventhandlers;
 
 import inverse.inverse.config.CommonConfig;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,7 +42,40 @@ public class NetherSpawn {
     public static void playerRespawnEvent(PlayerEvent.PlayerRespawnEvent event) {
         LOGGER.debug("Player died - respawning in nether");
         Player player = event.getPlayer();
-        respawnInNether(player);
+        ServerPlayer serverPlayer = (ServerPlayer) player;
+        ServerLevel level = (ServerLevel) player.level;
+        MinecraftServer minecraftServer = level.getServer();
+
+        // check "player.java" for details on respawn mechanics
+        if (serverPlayer.getRespawnDimension() == Level.OVERWORLD) {
+            if (CommonConfig.SPAWN.allowBedRespawn.get()) { // if beds are allowed
+                ServerLevel overworld = minecraftServer.getLevel(ServerLevel.OVERWORLD);
+                BlockPos respawnBlock = serverPlayer.getRespawnPosition();
+                serverPlayer.teleportTo(overworld, respawnBlock.getX(), respawnBlock.getY(), respawnBlock.getZ(), 0.0f, 0.0f);
+            }
+            else {
+                Component component = (new TextComponent("The overworld rejects your presence.")).withStyle(ChatFormatting.RED);
+                serverPlayer.sendMessage(component, serverPlayer.getUUID());
+                respawnInNether(player);
+            }
+        }
+        else if (serverPlayer.getRespawnDimension() == Level.NETHER) {
+            if (CommonConfig.SPAWN.allowAnchorRespawn.get()){
+                ServerLevel nether = minecraftServer.getLevel(ServerLevel.NETHER);
+                BlockPos respawnBlock = serverPlayer.getRespawnPosition();
+                BlockState blockstate = nether.getBlockState(respawnBlock);
+                if (blockstate.getBlock() instanceof RespawnAnchorBlock && blockstate.getValue(RespawnAnchorBlock.CHARGE) > 0) {
+                    serverPlayer.teleportTo(nether, respawnBlock.getX(), respawnBlock.getY(), respawnBlock.getZ(), 0.0f, 0.0f);
+                }
+            }
+            else{
+                respawnInNether(player);
+            }
+
+        }
+        else {
+            respawnInNether(player);
+        }
     }
 
     // Helper for spawning into the nether

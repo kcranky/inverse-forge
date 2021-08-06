@@ -77,6 +77,8 @@ public final class CommonConfig
 
     public static class Spawn {
 
+        public final ForgeConfigSpec.ConfigValue<Boolean> allowBedRespawn;
+        public final ForgeConfigSpec.ConfigValue<Boolean> allowAnchorRespawn;
         public final ForgeConfigSpec.ConfigValue<Boolean> spawnInNether;
         public final ForgeConfigSpec.ConfigValue<Boolean> useDeterminedSpawn;
         public final ForgeConfigSpec.ConfigValue<String> spawnCoordinates;
@@ -84,6 +86,14 @@ public final class CommonConfig
 
         public Spawn(ForgeConfigSpec.Builder builder) {
             builder.push("Inverse Spawn Config");
+
+            allowBedRespawn = builder
+                    .comment("Set if you want to enable beds as respawn points in the overworld")
+                    .define("allowBedRespawn", false);
+
+            allowAnchorRespawn = builder
+                    .comment("Set if you want to enable beds as respawn points in the overworld")
+                    .define("allowAnchorRespawn", true);
 
             spawnInNether = builder
                     .comment("Should the player spawn in the nether and respawn there if they don't have a bed set?")
