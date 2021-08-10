@@ -2,8 +2,6 @@
 
 *A Minecraft mod where the overworld fights back*
 
-**Version**: 0.0.1
-
 ## WAIT. YOU. YES YOU.
 
 This mod would not be possible without the help and support from the incredibly talented [battesonb](https://github.com/battesonb). Not only are they the only one between the two of us who actually can write Java, but they also set up the inital development environment, created the Iodised Apple art, added the initial capability functionality, provided a whole bunch of other logic, and was more patient with me than I deserved with my "I don't know java but want to make a mod" questions. Unfortunately, because porting to 1.17 came with a bunch of issues, keeping that old repo history was fairly difficult (read: impossible) and the rush to get this version out meant creating a new environment was faster than struggling to get the old one working. So this section is for you, battesonb. Thank you <3
@@ -68,8 +66,8 @@ The bahaviour given above is default behaviour. The mod allows All values can be
 
 - [Nether Portal Spread](https://www.curseforge.com/minecraft/mc-mods/nether-portal-spread)
   - Spreads the nether around portals in the overworld
-- [Immerisve Portals](https://www.curseforge.com/minecraft/mc-mods/immersive-portals-mod)
-  - Though this might cause quite a performance hit
+- [Immersive Portals](https://www.curseforge.com/minecraft/mc-mods/immersive-portals-mod)
+  - Quite a nice concept
   
 ## Currently developing for
 
