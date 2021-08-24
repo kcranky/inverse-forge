@@ -50,7 +50,7 @@ public class OverworldDamageHandler {
     public static void playerClone(PlayerEvent.Clone event) {
         Player original = event.getOriginal();
         Player player = event.getPlayer();
-
+        original.reviveCaps();
         original.getCapability(OverworldPoisonCapability.INSTANCE).ifPresent(owph -> {
             LOGGER.debug("Trying to move capability data to player clone...");
             player.getCapability(OverworldPoisonCapability.INSTANCE).ifPresent(newOwph -> {
@@ -58,6 +58,7 @@ public class OverworldDamageHandler {
                 LOGGER.debug("Successfully moved capability data to player clone");
             });
         });
+        original.invalidateCaps();
     }
 
     @SubscribeEvent
