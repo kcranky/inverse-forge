@@ -39,7 +39,7 @@ public class OverworldDamageHandler {
     public static void playerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = event.getPlayer();
         final Level world = player.level;
-        if (world.isClientSide) {
+        if (!world.isClientSide) {
             player.getCapability(OverworldPoisonCapability.INSTANCE).ifPresent(owph -> {
                 owph.setTicksInDimension(0);
             });
